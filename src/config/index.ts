@@ -7,5 +7,6 @@ if (configFound.error){
 }
 
 export default {
-    port: parseInt(process.env.PORT)
+    port: parseInt(process.env.PORT),
+    morgan: process.env.MORGAN
 }
