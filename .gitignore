@@ -1,0 +1,36 @@
+# Node.js specific
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+.pnpm-debug.log
+
+# Optional: Environment variables
+.env
+
+# Optional: Logs
+logs/
+*.log
+logs/*.log
+
+# Optional: Directory for npm cache
+.npm/
+
+# Optional: Directory for Yarn cache
+.yarn/cache/
+.pnp.*
+
+# Optional: OS generated files
+.DS_Store
+Thumbs.db
+
+# Optional: Coverage directory used by testing frameworks
+coverage/
+
+# Optional: IDE specific files
+.vscode/
+.idea/
+
+# Optional: Temporary build files
+dist/
+build/
