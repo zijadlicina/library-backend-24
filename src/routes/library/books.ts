@@ -1,7 +1,8 @@
-import type { Router, Request, Response } from "express";
+import { Router, Request, Response } from "express";
 import { booksController } from "../../controllers";
 
-export default ({router}: {router: Router}) => {
+export default () => {
+    const router = Router()
     router.get("/", booksController.getAllBooks);
     router.post("/", booksController.createOneBook);
     router.get("/:id", booksController.getOneBook)

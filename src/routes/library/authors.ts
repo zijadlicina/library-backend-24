@@ -1,7 +1,8 @@
-import type { Router, Request, Response } from "express";
+import { Router } from "express";
 import { authorsController } from "../../controllers";
 
-export default ({router}: {router: Router}) => {
+export default () => {
+    const router = Router()
     router.get("/", authorsController.getAllAuthors);
     router.post("/", authorsController.createOneAuthor);
     router.get("/:id", authorsController.getOneAuthor)
