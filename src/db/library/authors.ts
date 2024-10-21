@@ -1,3 +1,4 @@
+import { authorService } from "../../services"
 import { Query } from "../query"
 import crypto from "crypto"
 
@@ -15,7 +16,7 @@ async function getAll() {
 }
 async function createOne(newAuthor: author) {
 	console.log("new", newAuthor)
-	newAuthor.id = crypto.randomBytes(16).toString('hex');
+	newAuthor.id = authorService.generateRandomID()
     return await Query(`INSERT INTO author VALUES (?,?,?,?,?)`, 
 		[newAuthor.id, newAuthor.firstName, newAuthor.lastName,new Date(1,1,2001),newAuthor.image])
 }
