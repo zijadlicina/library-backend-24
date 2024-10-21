@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { createOne, getAll } from "../../db/library/authors";
+import { createOne, getAll, getOne, updateOne, removeOne } from "../../db/library/authors";
 
 export async function getAllAuthors(req: Request, res: Response, next: NextFunction) {
     try {
@@ -18,16 +18,36 @@ export async function createOneAuthor(req: Request, res: Response, next: NextFun
         next(error)
     }
 }
-export function getOneAuthor(req: Request, res: Response, next: NextFunction) {
-    const params = req.params;
-    let id = params.id;
-    res.json({msg: "get single author: ", id})
+export async function getOneAuthor(req: Request, res: Response, next: NextFunction) {
+    try {
+        const params = req.params;
+        let idAuthor: string = params.id;
+        const results = await getOne(idAuthor)
+        res.json(results) 
+    } catch (error) {
+        next(error)
+    }
 }
-export function updateOneAuthor(req: Request, res: Response, next: NextFunction) {
-    
+export async function updateOneAuthor(req: Request, res: Response, next: NextFunction) {
+    try {
+        const params = req.params;
+        let idAuthor: string = params.id;
+        let updateAuthor = req.body
+        const results = await updateOne(idAuthor, updateAuthor)
+        res.json(results) 
+    } catch (error) {
+        next(error)
+    }
 }
-export function deleteOneAuthor(req: Request, res: Response, next: NextFunction) {
-    
+export async function deleteOneAuthor(req: Request, res: Response, next: NextFunction) {
+    try {
+        const params = req.params;
+        let idAuthor: string = params.id;
+        const results = await removeOne(idAuthor)
+        res.json(results) 
+    } catch (error) {
+        next(error)
+    }
 }
 export function getBooksFromAuthor(req: Request, res: Response, next: NextFunction) {
 
