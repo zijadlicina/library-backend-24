@@ -1,9 +1,9 @@
-import { authorService } from "../../services"
+import { makeSqlUpdateQuery } from "../../services/library/authorService"
 import { Query } from "../query"
-import crypto from "crypto"
+import { removeAllWithAuthor } from "./authorBook"
 
-interface author {
-	id: string,
+export interface author {
+	guid: string,
 	firstName: String,
 	lastName: String,
 	dob: Date,  	// date of birth
@@ -15,20 +15,19 @@ async function getAll() {
     return await Query<author[]>("SELECT * FROM author;")
 }
 async function createOne(newAuthor: author) {
-	console.log("new", newAuthor)
-	newAuthor.id = authorService.generateRandomID()
     return await Query(`INSERT INTO author VALUES (?,?,?,?,?)`, 
-		[newAuthor.id, newAuthor.firstName, newAuthor.lastName,new Date(1,1,2001),newAuthor.image])
+		[newAuthor.guid, newAuthor.firstName, newAuthor.lastName, newAuthor.dob, newAuthor.image])
 }
 async function getOne(idAuthor: string) {
     return await Query<author>("SELECT * FROM author WHERE guid=?;", idAuthor)
 }
-async function updateOne(idAuthor: string, updateAuthor: any) {
-    return await Query<author>("UPDATE author SET firstName = ?, lastName = ?, dob = ?, image = ? WHERE guid=?;", 
-		[updateAuthor.firstName, updateAuthor.lastName, new Date(1,1,2001), updateAuthor.image, idAuthor]
-	)
+async function updateOne(idAuthor: string, updatedAuthor: any) {
+	let sqlQueryVal = makeSqlUpdateQuery(updatedAuthor, idAuthor)
+	if (sqlQueryVal[0] === 0) return {status: 400, message: "No fields were provided. Please ensure you include one of the fields: firstName, lastName, dob and image."}
+    return await Query<author>(sqlQueryVal[0], sqlQueryVal[1])
 }
 async function removeOne(idAuthor: string) {
+	await removeAllWithAuthor(idAuthor)
     return await Query<author>("DELETE FROM author WHERE guid=?;", idAuthor)
 }
 export {

@@ -1,3 +1,5 @@
+import { book } from "../../db/library/books";
+
 export function generateRandomISBN13(): string{
     let isbn = "";
     for (let i = 0; i < 12; i++) {
@@ -11,4 +13,30 @@ export function generateRandomISBN13(): string{
     isbn += checkDigit;
 
     return isbn;
+}
+export function makeSqlUpdateQuery(updatedBook: book, idBook: string): any[]{
+    let sqlQuery: string = "UPDATE book SET ";
+	let queryParams = [];
+	let queryValues: any[] = [];
+	if (updatedBook.title) {
+		queryParams.push("title = ?") 
+		queryValues.push(updatedBook.title) 
+	}
+	if (updatedBook.pages) {
+		queryParams.push("pages = ?")
+		queryValues.push(updatedBook.pages) 
+	}
+	if (updatedBook.published) {
+		queryParams.push("published = ?")
+		queryValues.push(updatedBook.published) 
+	}
+	if (updatedBook.image) {
+		queryParams.push("image = ?")
+		queryValues.push(updatedBook.image) 
+	}
+    if (queryParams.length === 0) return [0, 0]
+	sqlQuery += queryParams.join(", ")
+	sqlQuery += " WHERE isbn=?;"
+	queryValues.push(idBook)
+    return [sqlQuery, queryValues]
 }

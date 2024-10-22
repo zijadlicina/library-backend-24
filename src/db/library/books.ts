@@ -1,8 +1,8 @@
-import { bookService } from "../../services"
+import { makeSqlUpdateQuery } from "../../services/library/bookService"
 import { Query } from "../query"
-import crypto from "crypto"
+import { removeAllWithBook } from "./authorBook"
 
-interface book {
+export interface book {
 	isbn: string,       // International Standard Book Number (unique)
 	title: string,      
 	pages: Number,      // Total page numbers
@@ -15,19 +15,19 @@ async function getAll() {
     return await Query<book[]>("SELECT * FROM book;")
 }
 async function createOne(newBook: book) {
-	newBook.isbn = bookService.generateRandomISBN13()
     return await Query(`INSERT INTO book VALUES (?,?,?,?,?)`, 
 		[newBook.isbn, newBook.title, newBook.pages, newBook.published, newBook.image])
 }
 async function getOne(idBook: string) {
     return await Query<book>("SELECT * FROM book WHERE isbn=?;", idBook)
 }
-async function updateOne(idBook: string, updateBook: any) {
-    return await Query<book>("UPDATE book SET title = ?, pages = ?, published = ?, image = ? WHERE isbn=?;", 
-		[updateBook.title, updateBook.pages, updateBook.published, updateBook.image, idBook]
-	)
+async function updateOne(idBook: string, updatedBook: any) {
+	let sqlQueryVal = makeSqlUpdateQuery(updatedBook, idBook)
+	if (sqlQueryVal[0] === 0) return {status: 400, message: "No fields were provided. Please ensure you include one of the fields: title, pages, published and image."}
+    return await Query<book>(sqlQueryVal[0], sqlQueryVal[1])
 }
 async function removeOne(idBook: string) {
+	await removeAllWithBook(idBook)
     return await Query<book>("DELETE FROM book WHERE isbn=?;", idBook)
 }
 export {

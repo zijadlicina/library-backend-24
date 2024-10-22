@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authorsController } from "../../controllers";
+import { authorsController, authorBookController } from "../../controllers";
 
 export default () => {
     const router = Router()
@@ -8,8 +8,8 @@ export default () => {
     router.get("/:id", authorsController.getOneAuthor)
     router.put("/:id", authorsController.updateOneAuthor)
     router.delete("/:id", authorsController.deleteOneAuthor)
-    router.get("/:id/books", authorsController.getBooksFromAuthor);
-    router.post("/:id/authors", authorsController.addBookToAuthor);
-    router.delete("/:idBook/authors/:idAuthor", authorsController.deleteBookFromAuthor)
+    router.get("/:id/books", authorBookController.getBooksForAuthor);
+    router.post("/:id/books", authorBookController.addBookToAuthor);
+    router.delete("/:idAuthor/books/:idBook", authorBookController.deleteAuthorFromBook)
     return router;
 }
